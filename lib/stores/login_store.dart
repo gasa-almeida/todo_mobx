@@ -5,11 +5,7 @@ class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store {
 
-  _LoginStore(){
-    autorun((_){
-      print('validou: ' + isFormValid.toString());
-    });
-  }
+
 
   @observable
   String email = "";
@@ -19,6 +15,12 @@ abstract class _LoginStore with Store {
 
   @observable
   bool passwordVisible = false;
+
+  @observable
+  bool loading = false;
+
+  @observable
+  bool loggedIn = false;
 
 
   @action
@@ -30,6 +32,18 @@ abstract class _LoginStore with Store {
   @action
   void tooglePasswordVisibility() => passwordVisible = !passwordVisible;
 
+  @action
+  Future<void> login() async {
+    loading = true;
+
+    //executa codigo
+    await Future.delayed(Duration(seconds: 3));
+
+    loading = false;
+    loggedIn = true;
+
+  }
+
   
   @computed
   bool get isEmailValid =>
@@ -38,8 +52,9 @@ abstract class _LoginStore with Store {
   @computed
   bool get isPassowrdValid => password.length > 6;
 
+
   @computed
-  bool get isFormValid => isPassowrdValid && isEmailValid;
+  Function get loginPressed => (isEmailValid && isPassowrdValid && !loading) ? login : null;
 
 }
 
